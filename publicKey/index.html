@@ -35,8 +35,6 @@
                     </li>
                 </ul>
                 ということを確かめます。（鍵は非常に短いものにしているので、1文字ずつしか暗号化できません）
-                <input type="hidden" id="1_p" value="113">
-                <input type="hidden" id="1_q" value="701">
                 <table>
                     <tr>
                         <th></th>
@@ -51,7 +49,7 @@
                     <tr>
                         <th></th>
                         <td></td>
-                        <td><select id="1_enc_sel"><option value="3" selected>公開鍵を使って</option><option value="52267">秘密鍵を使って</option></select><input type="button" id="1_enc_btn" value="暗号化↓"/></td>
+                        <td><select id="1_enc_sel"><option value="1_e" selected>公開鍵を使って</option><option value="1_d">秘密鍵を使って</option></select><input type="button" id="1_enc_btn" value="暗号化↓"/></td>
                     </tr>
                     <tr>
                         <th>暗号文</th>
@@ -61,7 +59,7 @@
                     <tr>
                         <th></th>
                         <td></td>
-                        <td><select id="1_dec_sel"><option value="3">公開鍵を使って</option><option value="52267" selected>秘密鍵を使って</option></select><input type="button" id="1_dec_btn" value="復号↓"/></td>
+                        <td><select id="1_dec_sel"><option value="1_e">公開鍵を使って</option><option value="1_d" selected>秘密鍵を使って</option></select><input type="button" id="1_dec_btn" value="復号↓"/></td>
                     </tr>
                     <tr>
                         <th>復号結果</th>
@@ -69,6 +67,13 @@
                         <td><input type="text" id="1_decrypt16" ></td>
                     </tr>
                 </table>
+                <details>
+                    <summary>鍵</summary>
+                        p = <input type="text" id="1_p" value="113"><br>
+                        q = <input type="text" id="1_q" value="701"><br>
+                        e = <input type="text" id="1_e" value="3"><br>
+                        d = <input type="text" id="1_d" value="52267"><br>
+                </details>
             </details>
             <details>
                 <summary>暗号化と復号化の計算方法</summary>
@@ -116,18 +121,30 @@
                 <details>
                     <summary>d,e について</summary>
                     「a<sup>e</sup>(mod n)することで暗号化した値を、何乗したnの剰余がaに戻るのか(=d)」ということを、求めたわけですが、<br>
-                    式の説明ができなかったので、べき乗と剰余の表から動きを理解します。<br>
-                    <input type="button" onclick="calcByMakedKey('6_tbl_spec', '6_tbl_1', '5_p', '5_q')" value="生成した鍵で表を作成">←click
-                    <div id="6_tbl_spec"></div>
-                    <div id="6_tbl_1" width="95%" class="scroll_table"></div>
+                    式の説明ができなかったので、べき乗と剰余の表から動きを観察します。<br>
+                    <p>
+                        まず、p=7, q=11, e=7, d=43 の場合を例に考えてみます。<br>
+                        例えば、暗号化したい値が20のとき、下表によると20<sup>7</sup>(mod 77) ≡ 48 ということがわかります。これが暗号化された値になります。<br>
+                        複合化するときの計算は48<sup>43</sup>(mod 77)になるので、下表から48と43の交わる箇所を探すと、20に戻ることがわかります。<br>
+                        元の値や、鍵の値に関わらず、この暗号化と複合化の相互変換が成り立つことが確認できるはずです。
+                        <div id="6_tbl_spec_samp"></div>
+                        <div id="6_tbl_samp" width="95%" class="scroll_table"></div>
+                    </p>
+                    <hr>
+                    <p>
+                        <input type="button" onclick="calcByMakedKey('6_tbl_spec', '6_tbl_1', '5_p', '5_q')" value="生成した鍵で表を作成"><br>
+                        ※200*200で表を切っているので、p*qが200を大きく超える場合、うまく確認できないと思います。<br>
+                        <div id="6_tbl_spec"></div>
+                        <div id="6_tbl_1" width="95%" class="scroll_table"></div>
+                    </p>
                     
                 </details>
             </details>
             <details>
                 <summary>参考URL</summary>
-                https://ja.wikipedia.org/wiki/RSA%E6%9A%97%E5%8F%B7
-                https://www.ms.u-tokyo.ac.jp/tambara/docs/l4h20170722-2takagi.pdf
-                https://qiita.com/drken/items/6b4031ccbb2cab7436f3
+                <a href="https://ja.wikipedia.org/wiki/RSA%E6%9A%97%E5%8F%B7">https://ja.wikipedia.org/wiki/RSA%E6%9A%97%E5%8F%B7</a><br>
+                <a href="https://www.ms.u-tokyo.ac.jp/tambara/docs/l4h20170722-2takagi.pdf">https://www.ms.u-tokyo.ac.jp/tambara/docs/l4h20170722-2takagi.pdf</a><br>
+                <a href="https://qiita.com/drken/items/6b4031ccbb2cab7436f3">https://qiita.com/drken/items/6b4031ccbb2cab7436f3</a><br>
             </details>
         </div>
     </body>

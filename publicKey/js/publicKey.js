@@ -25,7 +25,8 @@ function hexToStr(hex) {
     return ret;
 }
 
-function encrypt(str, e, p, q) {
+function encrypt(str, eId, p, q) {
+    let e = document.getElementById(eId).value * 1;
     let ret = '';
     let spl = str.split(' ');
     for (let i=0; i<spl.length; i++) {
@@ -98,7 +99,30 @@ function primeCheck(id, resultId, pId, qId, nId, fId, eId) {
         let f = (p-1)*(q-1);
         document.getElementById(fId).innerText = f;
         coprimeList(p, q, eId);
+        selectE(eId, pId, qId, '5_d');
+        finishKeyMake(pId, qId, eId,'5_d', '5_result_p', '5_result_q', '5_result_n', '5_result_e', '5_result_d');
     };
+}
+function resetPrimeCheck(id) {
+    if (id.indexOf('p') != -1 ) {
+        pOk = false;
+        document.getElementById('5_check_p').innerText = '';
+    }
+    if (id.indexOf('q') != -1 ) {
+        qOk = false;
+        document.getElementById('5_check_q').innerText = '';
+    }
+
+    let list = document.getElementById('5_e');
+    while(list.lastChild) {
+		list.removeChild(list.lastChild);
+	}
+    document.getElementById('5_d').innerText = '';
+    document.getElementById('5_result_p').innerText = '';
+    document.getElementById('5_result_q').innerText = '';
+    document.getElementById('5_result_n').innerText = '';
+    document.getElementById('5_result_e').innerText = '';
+    document.getElementById('5_result_d').innerText = '';
 }
 function isCoprime(a, b) {
     while(a != b) {
@@ -163,12 +187,14 @@ function finishKeyMake(pId, qId, eId, dId, resultPId, resultQId, resultNId, resu
     let n = p*q;
     document.getElementById(resultNId).innerText = n;
 }
-function setEncryptStr(idFrom, idTo, idSel, p ,q) {
+function setEncryptStr(idFrom, idTo, idSel) {
+    let p = document.getElementById('1_p').value * 1;
+    let q = document.getElementById('1_q').value * 1;
     document.getElementById(idTo+'16').value = encrypt(document.getElementById(idFrom+'16').value, document.getElementById(idSel).value, p ,q);
     document.getElementById(idTo).value = hexToStr(document.getElementById(idTo+'16').value);
 }
-function setEncryptEvent(idBtn, idFrom, idTo, idSel, p ,q) {
-    document.getElementById(idBtn).addEventListener('click', function(){ setEncryptStr(idFrom, idTo, idSel, p ,q); } );
+function setEncryptEvent(idBtn, idFrom, idTo, idSel) {
+    document.getElementById(idBtn).addEventListener('click', function(){ setEncryptStr(idFrom, idTo, idSel); } );
 }
 function calcByMakedKey(specId, tableId, pId, qId) {
     let p = document.getElementById(pId).value * 1;
@@ -205,9 +231,8 @@ function init() {
     setToHexEvent('1_plain');
     // setToHexEvent('1_encrypt');
     // setToHexEvent('1_decrypt');
-    let p = document.getElementById('1_p').value;
-    let q = document.getElementById('1_q').value;
-    
-    setEncryptEvent('1_enc_btn', '1_plain',   '1_encrypt', '1_enc_sel', p, q);
-    setEncryptEvent('1_dec_btn', '1_encrypt', '1_decrypt', '1_dec_sel', p, q);
+
+    setEncryptEvent('1_enc_btn', '1_plain',   '1_encrypt', '1_enc_sel');
+    setEncryptEvent('1_dec_btn', '1_encrypt', '1_decrypt', '1_dec_sel');
+    powTable('6_tbl_spec_samp', '6_tbl_samp', 7, 11);
 }

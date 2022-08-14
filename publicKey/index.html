@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+    <head>
+        <link rel="stylesheet" href="../css/articles.css" />
+        <script src="../js/articles.js"></script>
+        <script src="./js/publicKey.js"></script>
+    </head>
+    <body onload="init();">
+        <div id="main">
+            <h1>RSA暗号</h1>
+            <details>
+                <summary>RSA暗号とは</summary>
+                「公開鍵」と「秘密鍵」の二つのキーのペアを用いて、あるデータを「読めない状態にしたり（暗号化）」「元に戻す（復号）」を行う暗号方式のことです。
+                このとき、「公開鍵」は誰でも参照できるように公開し、「秘密鍵」は自分以外には知られないようにする必要があります。
+                なぜ公開鍵は公開して良いのか、秘密鍵は公開してはいけないのか。また、二つの鍵を具体的にはどのように使用することで、暗号通信などに利用しているのか、簡単な実験とともに理解できるようにするのがこの文書の目的です。
+            </details>
+            <details id="section2">
+                <summary>🧪暗号化と復号</summary>
+                ここでは「あなた」の鍵について
+                <ul>
+                    <li>「公開鍵」で暗号化した文書は、
+                        <ul>
+                            <li>暗号化に使用した鍵（＝公開鍵）では復号できない。</li>
+                            <li>ペアとなっている「秘密鍵」でしか復号できないため、「あなた」だけが読める。</li>
+                        </ul>
+                    </li>
+                    <li>「秘密鍵」で暗号化した文書は、
+                        <ul>
+                            <li>ペアとなっている「公開鍵」で復号できるため、誰でも読める。</li>
+                            <li>「あなた」が書いたという証明になるため、署名に用いる。</li>
+                        </ul>
+                    </li>
+                </ul>
+                ということを確かめます。（鍵は非常に短いものにしているので、1文字ずつしか暗号化できません）
+                <input type="hidden" id="1_p" value="113">
+                <input type="hidden" id="1_q" value="701">
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>文字列</th>
+                        <th>16進数表現</th>
+                    </tr>
+                    <tr>
+                        <th>平文</th>
+                        <td><input type="text" id="1_plain" ></td>
+                        <td><input type="text" id="1_plain16" ></td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td></td>
+                        <td><select id="1_enc_sel"><option value="3" selected>公開鍵を使って</option><option value="52267">秘密鍵を使って</option></select><input type="button" id="1_enc_btn" value="暗号化↓"/></td>
+                    </tr>
+                    <tr>
+                        <th>暗号文</th>
+                        <td></td>
+                        <td><input type="text" id="1_encrypt16" ></td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td></td>
+                        <td><select id="1_dec_sel"><option value="3">公開鍵を使って</option><option value="52267" selected>秘密鍵を使って</option></select><input type="button" id="1_dec_btn" value="復号↓"/></td>
+                    </tr>
+                    <tr>
+                        <th>復号結果</th>
+                        <td><input type="text" id="1_decrypt" ></td>
+                        <td><input type="text" id="1_decrypt16" ></td>
+                    </tr>
+                </table>
+            </details>
+            <details>
+                <summary>暗号化と復号化の計算方法</summary>
+
+                平文Aをe乗してnで剰余を取った値が暗号文B
+                暗号文Bをd乗してnで剰余を取った値が平文A
+            </details>
+            <details>
+                <summary>計算時間</summary>
+                <p>暗号の安全性は、その解読の困難さ（＝計算時間の長さ）によって保証されています。
+                一方で、暗号化や復号にも時間がかかってしまうようでは実用的ではありません。
+                ここでは、巨大な数の素因数分解の困難さと、巨大な数のべき乗が高速にできることを実験で確かめます。</p>
+
+                <p>計算時間の概算には、富岳の性能を参考に1秒間に4×10<sup>17</sup>（40京）回計算できるものとしています。</p>
+                暗号の長さが<input type="text" id="2_bit" >bitの場合
+                <h3>素因数分解</h3>
+                素因数分解は、「試し割り」を行い「割り切れる整数があるかどうか」を確認する以外に方法がありません。
+                暗号の長さが<span id="2_bit2" class="number"></span>bitの場合、1から√<span id="2_deg2" class="number"></span>までの間に素因数があるかどうかを確かめるため、
+                計算回数は最大で<span id="2_sqrt2" class="number"></span>回となり、<span id="2_sec2" class="number"></span>秒（<span id="2_time2" class="number"></span>）かかります。
+                <h3>べき乗</h3>
+                素因数分解は、「試し割り」を行い「割り切れる整数があるかどうか」を確認する以外に方法がありません。
+                暗号の長さが<span id="2_bit2" class="number"></span>bitの場合、1から√<span id="2_deg2" class="number"></span>までの間に素因数があるかどうかを確かめるため、
+                計算回数は最大で<span id="2_sqrt2" class="number"></span>回となり、<span id="2_sec2" class="number"></span>秒（<span id="2_time2" class="number"></span>）かかります。
+            </details>
+            <details>
+                <summary>🧪鍵の作成</summary>
+                <p>ここでは、ある程度の手作業と少しの自動計算で、RSA暗号の鍵を生成してみます。</p>
+
+                <p>二つの異なる素数p,qを選び、P*q,(p-1)(q-1)を求める<br>
+                p=<input type="text" id="5_p" size="8" value="113" onchange="resetPrimeCheck('5_p', '5_check_p')"><input type="button" onclick="primeCheck('5_p', '5_check_p', '5_p', '5_q', '5_n', '5_f', '5_e')" value="素数チェック"><span id="5_check_p"></span><br>
+                q=<input type="text" id="5_q" size="8" value="701" onchange="resetPrimeCheck('5_q', '5_check_q')"><input type="button" onclick="primeCheck('5_q', '5_check_q', '5_p', '5_q', '5_n', '5_f', '5_e')" value="素数チェック"><span id="5_check_q"></span><br>
+                p*q&nbsp;=&nbsp;n&nbsp;=&nbsp;<span id="5_n" class="number">&nbsp;</span><br>
+                (p-1)(q-1)&nbsp;=&nbsp;<span id="5_f" class="number">&nbsp;</span><br>
+                </p>
+                <p>
+                (p-1)(q-1)に対して、1以外の公約数を持たない(互いに素な)正の整数eを選ぶ。<br>
+                e&nbsp;=&nbsp;<select id="5_e" onchange="selectE('5_e', '5_p', '5_q', '5_d');finishKeyMake('5_p','5_q','5_e','5_d', '5_result_p', '5_result_q', '5_result_n', '5_result_e', '5_result_d');"></select><br>
+                d*e+x*(p-1)(q-1)=1を満たすdを求める。<br>
+                d&nbsp;=&nbsp;<span id="5_d" class="number">&nbsp;</span><br>
+                </p>
+                完成<br>
+                公開鍵はe&nbsp;=&nbsp;<span id="5_result_e" class="number"></span>,&nbsp;n&nbsp;=&nbsp;<span id="5_result_n" class="number"></span><br>
+                秘密鍵はd&nbsp;=&nbsp;<span id="5_result_d" class="number"></span>,&nbsp;p&nbsp;=&nbsp;<span id="5_result_p" class="number"></span>,&nbsp;q&nbsp;=&nbsp;<span id="5_result_q" class="number"></span>
+                です！
+                <details>
+                    <summary>d,e について</summary>
+                    「a<sup>e</sup>(mod n)することで暗号化した値を、何乗したnの剰余がaに戻るのか(=d)」ということを、求めたわけですが、<br>
+                    式の説明ができなかったので、べき乗と剰余の表から動きを理解します。<br>
+                    <input type="button" onclick="calcByMakedKey('6_tbl_spec', '6_tbl_1', '5_p', '5_q')" value="生成した鍵で表を作成">←click
+                    <div id="6_tbl_spec"></div>
+                    <div id="6_tbl_1" width="95%" class="scroll_table"></div>
+                    
+                </details>
+            </details>
+            <details>
+                <summary>参考URL</summary>
+                https://ja.wikipedia.org/wiki/RSA%E6%9A%97%E5%8F%B7
+                https://www.ms.u-tokyo.ac.jp/tambara/docs/l4h20170722-2takagi.pdf
+                https://qiita.com/drken/items/6b4031ccbb2cab7436f3
+            </details>
+        </div>
+    </body>
+</html>
